@@ -1,0 +1,7 @@
+# Prospecteur SC — règles d'exploration
+# Site statique, tout le contenu est public.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.prospecteursc.fr/sitemap.xml

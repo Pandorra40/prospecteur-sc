@@ -1,0 +1,141 @@
+# =====================================================
+# Prospecteur SC — Configuration Apache (.htaccess)
+# Adapté à un hébergement statique type LWS / OVH
+# =====================================================
+
+# ---------- Sécurité de base ----------
+
+# Désactive le listage des dossiers (sécurité)
+Options -Indexes
+
+# Protège le .htaccess lui-même
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+# ---------- Forcer HTTPS ----------
+# Redirige tout trafic HTTP vers HTTPS
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ---------- Page 404 personnalisée ----------
+# Sert la 404.html générée par Nuxt
+ErrorDocument 404 /404.html
+
+# ---------- Compression Gzip ----------
+# Réduit la taille des fichiers texte servis (jusqu'à -70%)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/atom+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/woff
+    AddOutputFilterByType DEFLATE font/woff2
+</IfModule>
+
+# ---------- Cache navigateur ----------
+# Mise en cache agressive pour les assets versionnés (hash dans le nom)
+# Cache court pour le HTML (24h max), pour permettre les mises à jour
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # HTML : 1 heure (permet des MAJ rapides)
+    ExpiresByType text/html "access plus 1 hour"
+
+    # CSS / JS : 1 an (les noms contiennent un hash, donc safe)
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+
+    # Polices : 1 an
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+
+    # Images : 1 mois
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 month"
+
+    # JSON (payloads Nuxt, données) : 1 heure
+    ExpiresByType application/json "access plus 1 hour"
+</IfModule>
+
+# ---------- Cache-Control pour les assets versionnés ----------
+# Les fichiers dans _nuxt/ ont un hash dans le nom : on peut les cacher "immutable"
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|woff|woff2|ttf|otf|eot|png|jpg|jpeg|gif|svg|webp|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # HTML : revalidation à chaque visite (mais cache navigateur 1h via Expires)
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # Sécurité : empêche le sniffing MIME
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Sécurité : protection contre le clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Sécurité : politique de référent
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Sécurité : force HTTPS pendant 1 an, inclus sous-domaines
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Sécurité : Content-Security-Policy
+    # - default-src 'self' : par défaut, ne charge que depuis notre domaine
+    # - script-src : scripts depuis notre domaine + inline pour le payload SSR de Nuxt
+    # - style-src : styles depuis notre domaine + inline (Tailwind / variables CSS dynamiques)
+    # - font-src : polices auto-hébergées (data: pour SVG inline)
+    # - img-src : images depuis notre domaine + data:/blob: pour les icônes inline
+    # - connect-src : autorise les appels XHR/fetch vers UEX (mise à jour live des prix)
+    # - frame-ancestors : équivaut à X-Frame-Options, plus moderne
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' https://api.uexcorp.space; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+
+    # Sécurité : Permissions-Policy
+    # Désactive tous les capteurs/APIs sensibles dont le site n'a pas besoin
+    Header always set Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+</IfModule>
+
+# ---------- Types MIME forcés ----------
+# Au cas où le serveur ne reconnaîtrait pas certains formats
+<IfModule mod_mime.c>
+    AddType application/javascript .js .mjs
+    AddType application/json .json
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+    AddType image/svg+xml .svg
+    AddType image/webp .webp
+</IfModule>
+
+# ---------- Encodage UTF-8 ----------
+# Force l'encodage UTF-8 pour les fichiers texte (évite les accents cassés)
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .html .htm .css .js .mjs .json .xml .txt .svg
+</IfModule>
+
+# ---------- URLs sans slash final ----------
+# Nuxt génère des dossiers avec index.html, donc /minerais/ marche.
+# Optionnel : redirige /minerais vers /minerais/ pour cohérence.
+# (Apache le fait par défaut grâce à DirectorySlash, donc rien à ajouter.)
