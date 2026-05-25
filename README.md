@@ -59,7 +59,7 @@ est servi depuis votre propre domaine, conforme RGPD sans configuration supplém
 
 ### Prérequis
 
-- **Node.js 22+** (testé avec 22.22)
+- **Node.js 22+**
 - **npm 10+**
 
 ### Installation
@@ -96,7 +96,7 @@ Sortie type :
 [sync-prices] Récupération UEX : 200 commodités reçues
 [sync-prices] 22 minerais synchronisés (20 partiels), 0 ignorés
 [sync-prices] ✓ Fichier mis à jour : app/utils/ore-prices.ts
-[sync-prices] ✓ Date de fraîcheur : 2026-05-21T12:59:36.161Z
+[sync-prices] ✓ Date de fraîcheur : [timestamp ISO du build]
 ```
 
 ### Stratégie de prix
@@ -129,13 +129,13 @@ Cette commande exécute en séquence :
 
 Résultat : un dossier **`.output/public/`** d'environ 14 Mo, contenant tout le site.
 
-### 2. Déployer sur LWS (FTP)
+### 2. Déployer sur un hébergement statique
 
 Le dossier `.output/public/` contient l'intégralité du site. Pour le mettre en ligne :
 
-1. Ouvrez votre client FTP (FileZilla, Cyberduck...)
-2. Connectez-vous à votre espace LWS avec vos identifiants FTP
-3. Naviguez jusqu'au dossier public de votre hébergement (souvent `www/` ou `htdocs/`)
+1. Ouvrez votre client FTP préféré
+2. Connectez-vous à votre hébergement avec vos identifiants FTP
+3. Naviguez jusqu'au dossier public (souvent `www/` ou `htdocs/`)
 4. **Uploadez tout le contenu de `.output/public/`** dans ce dossier
 5. Le site est en ligne
 
@@ -152,16 +152,16 @@ npm install            # si dépendances modifiées
 npm run generate       # build avec prix UEX du jour
 ```
 
-Puis upload du dossier `.output/public/` sur LWS.
+Puis upload du dossier `.output/public/` sur votre hébergement.
 
-### Hébergeurs alternatifs
+### Hébergeurs compatibles
 
 Le dossier `.output/public/` peut être déployé sur n'importe quel hébergement statique :
 
-- **Netlify / Vercel / Cloudflare Pages** : déploiement automatique depuis GitHub
-- **OVH hébergement web** : upload FTP classique
+- **Hébergement mutualisé** (Apache / Nginx) : upload FTP classique
+- **Netlify / Vercel / Cloudflare Pages** : déploiement automatique depuis Git
 - **GitHub Pages** : via une GitHub Action
-- **Serveur Apache / Nginx** : copie simple du dossier
+- **Serveur dédié** : copie simple du dossier vers le webroot
 
 ---
 
