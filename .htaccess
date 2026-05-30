@@ -100,6 +100,9 @@ ErrorDocument 404 /404.html
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
     # Sécurité : force HTTPS pendant 1 an, inclus sous-domaines
+    # On retire d'abord tout HSTS existant pour éviter un doublon si une couche
+    # amont (proxy/edge de l'hébergeur) en injecte déjà un.
+    Header always unset Strict-Transport-Security
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
     # Sécurité : Content-Security-Policy
