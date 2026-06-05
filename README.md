@@ -35,8 +35,8 @@ des données de la communauté **Regolith Co.** et **UEX Corp**.
 ### Transversal
 - **Top revenus** : comparatif des activités vaisseau et terrestre par UEC/h
 - **Prix marché** synchronisés avec UEX Corp (mise à jour automatique au build + au runtime)
-- **Favoris** sauvegardés dans le navigateur (localStorage)
-- **Mode sombre** immersif avec thème "roche en fusion"
+- **Filtres et tri** : panneau latéral par système, type de lieu, rareté ou méthode ; état des filtres reflété dans l'URL (recherches partageables)
+- **Mode sombre** immersif (palette acier spatial à accents ambrés)
 
 ---
 
@@ -237,14 +237,14 @@ prospecteur-sc/
 │   │   ├── StatsPanel.vue
 │   │   ├── TierBadge.vue
 │   │   ├── GemTierBadge.vue
-│   │   └── FavoriteButton.vue
+│   │   └── FilterPanel.vue             # Panneau de filtres réutilisable
 │   │
 │   ├── composables/                    # Logique réactive partagée
 │   │   ├── useMiningData.ts            # Données minage vaisseau
 │   │   ├── useGemData.ts               # Données minage terrestre
 │   │   ├── useOrePrices.ts             # Façade prix vaisseau
 │   │   ├── useLivePrices.ts            # Fetch UEX runtime + cache
-│   │   └── useFavorites.ts             # Favoris localStorage
+│   │   └── useUrlFilters.ts            # Sync filtres/tri ↔ URL
 │   │
 │   ├── utils/                          # Données et helpers purs
 │   │   ├── ore-classification.ts       # Tiers minerais vaisseau
