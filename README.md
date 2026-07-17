@@ -1,7 +1,8 @@
 # Prospecteur SC
 
 Outil non officiel pour les mineurs de Star Citizen — version française et simplifiée
-des données de la communauté **Regolith Co.** et **UEX Corp**.
+s'appuyant sur les prix **UEX Corp** (à jour) et une archive des données de prospection
+**Regolith Co.** (projet communautaire fermé en 2026).
 
 ## Sommaire
 
@@ -284,8 +285,8 @@ prospecteur-sc/
 
 ### Sources
 
-- **Zones et probabilités** : [Regolith Co.](https://regolith.rocks) (export manuel, JSON)
-- **Prix marché** : [UEX Corp](https://uexcorp.space) (API publique, automatique)
+- **Zones et probabilités** : archive Regolith Co. (export manuel JSON, projet communautaire fermé en 2026 — données figées)
+- **Prix marché** : [UEX Corp](https://uexcorp.space) (API publique, mise à jour automatique)
 
 ### Couverture actuelle
 
@@ -341,7 +342,7 @@ haut du fichier sous `@theme static` (`--color-rock-*`, `--color-ember-*`).
 
 ## Crédits
 
-- **Données minage** : [Regolith Co.](https://regolith.rocks) — communauté de prospecteurs SC
+- **Données minage** : Regolith Co. — communauté de prospecteurs SC (projet fermé en 2026, merci à eux)
 - **Données prix** : [UEX Corp](https://uexcorp.space) — base de données économique communautaire
 - **Star Citizen** : © Cloud Imperium Games — projet de fan non officiel
 
